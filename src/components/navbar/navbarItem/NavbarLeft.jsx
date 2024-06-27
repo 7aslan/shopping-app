@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const NavbarLeft = () => {
-  return (
-    <div className='text-6xl  '>ShopLess </div>
-  )
-}
+  return <div className="text-6xl  ">ShopLess </div>;
+};
 
-export default NavbarLeft
+export default NavbarLeft;
