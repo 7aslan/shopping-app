@@ -12,7 +12,7 @@ const Category = () => {
   }, [dispatch]);
 
   return (
-    <div className="w-1/6 bg-gray-100 p-4">
+    <div className="w-1/6 bg-gray-100 p-4 max-h-screen">
       <div className="border-b pb-1 text-xl px-2 font-bold">Category</div>
       {categories && categories.length > 0
         ? categories.map((category, i) => (
