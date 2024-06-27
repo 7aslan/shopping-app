@@ -1,7 +1,16 @@
-
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 function App() {
-  return <div className="text-3xl font-bold underline">Hello World</div>;
+  return (
+    <div>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="users/*" element={<Users />} />
+        </Routes>
+      </Router>
+    </div>
+  );
 }
 
 export default App;
