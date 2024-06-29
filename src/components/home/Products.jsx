@@ -1,29 +1,63 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "../../redux/productSlice";
+import { getCategoryProducts, getProducts } from "../../redux/productSlice";
 
 import Loading from "../Loading";
 import Product from "./Product";
+import ReactPaginate from "react-paginate";
 
-const Products = () => {
+const Products = ({ category }) => {
   const dispatch = useDispatch();
   const { products, productsStatus } = useSelector((state) => state.products);
 
+  const [itemOffset, setItemOffset] = useState(0);
+  const itemsPerPage = 6;
+  // Simulate fetching items from another resources.
+  // (This could be items from props; or items loaded in a local state
+  // from an API endpoint with useEffect and useState)
+  const endOffset = itemOffset + itemsPerPage;
+  const currentItems = products.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(products.length / itemsPerPage);
+
+  // Invoke when user click to request another page.
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % products.length;
+    setItemOffset(newOffset);
+  };
+
   useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
+    if (category) {
+      dispatch(getCategoryProducts(category));
+    } else {
+      dispatch(getProducts());
+    }
+  }, [dispatch, category]);
   return (
     <div>
       {productsStatus == "LOADING" ? (
         <Loading />
       ) : (
-        <div className="flex flex-wrap">
-          {products && products.length > 0
-            ? products.map((product, i) => (
-                <Product key={i} product={product} />
-              ))
-            : null}
-        </div>
+        <>
+          (
+          <div className="flex flex-wrap">
+            {products && products.length > 0
+              ? currentItems.map((product, i) => (
+                  <Product key={i} product={product} />
+                ))
+              : null}
+          </div>
+          <ReactPaginate
+            className="paginate"
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+            previousLabel="<"
+            renderOnZeroPageCount={null}
+          />
+          )
+        </>
       )}
     </div>
   );
