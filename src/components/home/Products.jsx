@@ -6,7 +6,7 @@ import Loading from "../Loading";
 import Product from "./Product";
 import ReactPaginate from "react-paginate";
 
-const Products = ({ category }) => {
+const Products = ({ category, sort }) => {
   const dispatch = useDispatch();
   const { products, productsStatus } = useSelector((state) => state.products);
 
@@ -32,6 +32,7 @@ const Products = ({ category }) => {
       dispatch(getProducts());
     }
   }, [dispatch, category]);
+
   return (
     <div>
       {productsStatus == "LOADING" ? (
@@ -40,10 +41,16 @@ const Products = ({ category }) => {
         <>
           (
           <div className="flex flex-wrap">
-            {products && products.length > 0
-              ? currentItems.map((product, i) => (
-                  <Product key={i} product={product} />
-                ))
+            {currentItems && currentItems.length > 0
+              ? currentItems
+                  ?.sort((a, b) =>
+                    sort === "inc"
+                      ? a.price - b.price
+                      : sort === "dec"
+                      ? b.price - a.price
+                      : null
+                  )
+                  ?.map((product, i) => <Product key={i} product={product} />)
               : null}
           </div>
           <ReactPaginate
